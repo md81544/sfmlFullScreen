@@ -1,11 +1,16 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 
+#include <filesystem>
 #include <iostream>
 #include <vector>
 
-int main()
+int main(int, char* argv[])
 {
+    // Get the location of the executable (this will follow symlinks)
+    std::filesystem::path executable(argv[0]);
+    std::filesystem::path cwd = executable.remove_filename();
+
     std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
     if (modes.empty()) {
         std::cout << "Empty set of modes returned\n";
@@ -42,7 +47,8 @@ int main()
     window.setFramerateLimit(24);
 
     sf::Font font;
-    if (!font.loadFromFile("/Users/mcd/src/sfmlFullScreen/open_sans.ttf")) {
+    std::filesystem::path fontFile = cwd / "open_sans.ttf";
+    if (!font.loadFromFile(fontFile.c_str())) {
         std::cout << "Couldn't load font file\n";
         return 2;
     }

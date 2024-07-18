@@ -9,7 +9,6 @@ int main()
     std::vector<sf::VideoMode> modes = sf::VideoMode::getFullscreenModes();
     if (modes.empty()) {
         std::cout << "Empty set of modes returned\n";
-        return 1;
     } else {
         for (std::size_t i = 0; i < modes.size(); ++i) {
             sf::VideoMode mode = modes[i];
@@ -18,7 +17,7 @@ int main()
         }
     }
 
-    // So the resolutions reported are:
+    // So the resolutions reported on a older Intel macbook are:
     // Mode #0: 3300x2100 - 32 bpp
     // Mode #1: 2880x1800 - 32 bpp
     // Mode #2: 2560x1600 - 32 bpp
@@ -28,14 +27,18 @@ int main()
     // Mode #6: 1600x1200 - 32 bpp
     // Mode #7: 1280x960 - 32 bpp
 
-    // If we use the highest resolution in the list, we get back a reported window size
-    // of 1920 x 1200. This seems more sane now, because 1920 is what I've got my "resolution"
-    // set to in MacOS's settings. So the best approach seems to be to just choose the
-    // highest mode and then determine what the resolution actually is once it's created.
-    // BTW - the highest resolutions in the list above do not correspond to what MacOS says
-    // is available... but this approach seems to work OK.
-    sf::RenderWindow window(
-        sf::VideoMode(modes[0].width, modes[0].height), "Test", sf::Style::Fullscreen);
+    // However on an Apple silicon mac, the modes vector is empty.
+    // Setting NSHighResolutionCapable to true or false in the Info.plist appears to
+    // have no effect either way.
+    sf::RenderWindow window;
+    if (!modes.empty()) {
+        window.create(
+            sf::VideoMode(modes[0].width, modes[0].height), "Test", sf::Style::Fullscreen);
+    } else {
+        // So we fall back to windowed. Any attempt at fullscreen will cause a segfault
+        // owing to the bug outlined in my report at https://github.com/SFML/SFML/issues/2300
+        window.create(sf::VideoMode(1280, 800), "Test");
+    }
     window.setFramerateLimit(24);
 
     sf::Font font;
@@ -48,8 +51,7 @@ int main()
     txt.setFillColor({ 0, 200, 0 });
     txt.setCharacterSize(100);
     std::string txtString = "Resolution: " + std::to_string(window.getSize().x) + " x "
-        + std::to_string(window.getSize().y) + "\n\n"
-        + "Press Esc to quit";
+        + std::to_string(window.getSize().y) + "\n\n" + "Press Esc to quit";
     txt.setString(txtString);
     txt.setPosition({ 100.f, 100.f });
 

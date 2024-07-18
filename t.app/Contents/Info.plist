@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><plist version="1.0">
+<dict>
+<key>CFBundleExecutable</key>
+<string>t</string>
+<key>CFBundleGetInfoString</key>
+<string>Test 1.0</string>
+<key>CFBundleVersion</key>
+<string>1.0</string>
+<key>CFBundleShortVersionString</key>
+<string>1.0</string>
+<key>NSHighResolutionCapable</key>
+<true/>
+<key>CFBundleIconFile</key>
+<string>t</string>
+</dict>
+</plist>
+

@@ -49,7 +49,7 @@ int main(int, char* argv[])
     sf::Font font;
     std::filesystem::path fontFile = cwd / "open_sans.ttf";
     if (!font.loadFromFile(fontFile.c_str())) {
-        std::cout << "Couldn't load font file\n";
+        std::cout << "Couldn't load font file " << fontFile.c_str() << std::endl;
         return 2;
     }
     sf::Text txt;

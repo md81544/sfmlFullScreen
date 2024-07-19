@@ -7,6 +7,9 @@
 
 int main(int, char* argv[])
 {
+    // This is just for testing an SFML bug in SFML on Apple silicon Macs
+    // See my report at https://github.com/SFML/SFML/issues/2300
+
     // Get the location of the executable (this will follow symlinks)
     std::filesystem::path executable(argv[0]);
     std::filesystem::path cwd = executable.remove_filename();
